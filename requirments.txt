@@ -1,0 +1,8 @@
+MDAnalysis
+numpy
+mdtraj
+flask
+matplotlib
+google-generativeai
+Bio
+biopython

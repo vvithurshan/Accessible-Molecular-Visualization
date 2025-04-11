@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pymol User Input</title>
+  <!-- Bootstrap CSS -->
+  <link href="bootstrap.min.css" rel="stylesheet">
+
+
+  <script>
+    window.onload = function () {
+      window.resizeTo(600, 400); // Adjust the dimensions as per your requirement
+    };
+  </script>
+
+
+  <style>
+    /* Styling for the container */
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background-color: #f8f9fa;
+    }
+
+
+
+    /* Styling for the title */
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+      background-color: #000;
+      ;
+      color: #fff;
+      padding: 10px;
+      border-radius: 8px 8px 0 0;
+    }
+
+
+    /* Styling for the input container */
+    .input-container {
+      margin-bottom: 20px;
+    }
+    
+    /* Styling for the label */
+    label {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    /* Styling for the input box */
+    #input_data {
+      width: 100%;
+      padding: 10px;
+      font-size: 32px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      background-color: #fff;
+      box-sizing: border-box;
+    }
+
+    /* Styling for the submit button */
+    #submit-button {
+      display: block;
+      font-size: 24px;
+      margin-top: 20px;
+      /* Space below the input box */
+      align-self: flex-end;
+      width: 100%;
+
+    }
+
+    .result-container {
+      margin-top: 20px;
+    }
+
+    #result {
+      width: 100%;
+      height: 500px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 28px;
+    }
+      .result-label {
+      display: block;
+      margin-top: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="title">Pymol User Input</div>
+    <form action="{{ url_for('output') }}" method="POST">
+      <!-- onsubmit="return handleSubmit()" -->
+      <div class="input-container">
+        <label for="input_data">Enter input data:</label>
+        <input id="input_data" name="input_data" required></input>
+      </div>
+      <button type="submit" id="submit-button" class="btn btn-primary">Submit</button>
+      <!-- <div id="submission-msg" class="mt-3"></div> -->
+    </form>
+  </div>
+    <div class="result-container">
+      <label for="result" class="result-label">Results</label>
+      <!-- <input id="result" name="result" value="{{ final_result }}" readonly>
+      < -->
+      <textarea id="result" name="results" readonly> {{final_result}}</textarea>
+      <!-- <p1 id="test">This is only for Test</p1> -->
+    </div>
+
+<script>
+  var speaking = false; // Flag to track whether speech synthesis is in progress
+  // Function to generate voice output
+  function generateVoiceOutput(text) {
+     speaking = true; // Set speaking flag to true
+    // Create a new SpeechSynthesisUtterance object
+    var utterance = new SpeechSynthesisUtterance();
+    utterance.text = text;
+
+    // Use Microsoft Edge voice
+    utterance.voiceURI = "Microsoft David Desktop - English (United States)";
+
+    utterance.onend = function () {
+      speaking = false; // Set speaking flag to false when speech synthesis ends
+    };
+    // Speak the text
+    window.speechSynthesis.speak(utterance);
+  }
+
+  // Get the initial text value
+  var initialText = document.getElementById("result").value;
+  generateVoiceOutput(initialText);
+
+  // Function to update the text and trigger voice output
+  function updateTextAndSpeak(text) {
+    document.getElementById("result").value = text;
+    generateVoiceOutput(text);
+  }
+
+  // Event listener to trigger voice output when input changes
+  document.getElementById("result").addEventListener("input", function () {
+    var updatedText = document.getElementById("result").value;
+    generateVoiceOutput(updatedText);
+  });
+
+// Function to repeat voice output
+  function repeatVoiceOutput() {
+    if (!speaking) { // Check if speech synthesis is not in progress
+      var repeatedText = document.getElementById("result").value;
+      generateVoiceOutput(repeatedText);
+    }
+  }
+1
+  // Event listener to trigger voice output when any key is pressed
+  document.addEventListener("keypress", function (event) {
+    if (event.key === "0"){
+      repeatVoiceOutput();
+    // if (event.key === "1"){
+    //   generateVoiceOutput("")
+    // }
+    }
+  });
+</script>
+</body>
+
+</html>
